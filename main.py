@@ -8,13 +8,17 @@ min_r = -5
 
 
 def convert(list):
-    res = int("".join(map(str, list)))
-    return res
+    # res = int("".join(map(str, list)))
+    conv = 0
+    for i in range(3):
+        conv += list[i] * (10 ** (-(i + 1)))
+    return conv
 
 
 def encode(genotype):
     converted = convert(genotype)
-    phenotype = (converted * (max_r - min_r) / 999) - min_r
+    # phenotype = (converted * (max_r - min_r) / 999) - min_r
+    phenotype = (min_r + ((max_r - min_r) / 9 * 0.111) + converted)
     return phenotype
 
 
@@ -23,7 +27,7 @@ def heuristic(x, y):
 
 
 def fitness(x, y):
-    return 1/heuristic(x, y) + np.finfo(float).eps
+    return 1/heuristic(x, y) + (10 ** -20)
 
 
 def define_individual(individual):
@@ -112,11 +116,11 @@ for i in range(20):
 #     print(j)
 
 
-for j in range(1, 51, 1):
+for j in range(1, 61, 1):
     parents = parent_selection(population)
     crossover(population, parents[0], parents[1])
     survivor_selection(population)
-    print(
-        f"x = {encode(list(population[0]['genotype'][:3]))}, y = {encode(list(population[0]['genotype'][3:]))}")
     print(f"Generation {j} : ", fitness(
         population[0]["phenotype-x"], population[0]["phenotype-y"]))
+    print(
+        f"x = {encode(list(population[0]['genotype'][:3]))}, y = {encode(list(population[0]['genotype'][3:]))}")
